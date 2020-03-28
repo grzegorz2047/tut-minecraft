@@ -20,6 +20,7 @@ public class PlayerJoinListener implements Listener {
             player.setGameMode(GameMode.SPECTATOR);
         } else {
             game.addPlayer(player);
+            game.verifyState();
         }
     }
 }

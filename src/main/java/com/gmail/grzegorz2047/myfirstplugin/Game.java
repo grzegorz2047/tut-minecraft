@@ -12,12 +12,16 @@ import java.util.Collection;
 import java.util.List;
 
 public class Game {
-    private boolean started;
+    private final int MIN_PLAYERS_TO_KEEP_COUNTING = 7;
+    private final int NUMBER_OF_PLAYERS_TO_START_COUNTING = 10;
+    private final int TIME_TO_START_A_GAME = 30;
+    private GameCounter gameCounter = new GameCounter();
+    private GameState state = GameState.WAITING;
     private List<String> team1 = new ArrayList<>();
     private List<String> team2 = new ArrayList<>();
 
     public boolean isStarted() {
-        return started;
+        return state == GameState.WARMUP || state == GameState.DEATHMATCH;
     }
 
     public void addPlayer(Player player) {
@@ -56,12 +60,32 @@ public class Game {
     }
 
     public void verifyState() {
+        int numberOfPlayerOnServer = Bukkit.getOnlinePlayers().size();
         if(isStarted()) {
             if (isOneTeamLeft()) {
                 end();
             }
+        } else if (state == GameState.STARTING) {
+            if (numberOfPlayerOnServer < MIN_PLAYERS_TO_KEEP_COUNTING) {
+                stopCounting();
+            }
+        } else {
+            if (numberOfPlayerOnServer == NUMBER_OF_PLAYERS_TO_START_COUNTING) {
+                startCounting();
+            }
         }
     }
+
+    private void stopCounting() {
+        state = GameState.WAITING;
+        gameCounter.cancelCounting();
+    }
+
+    private void startCounting() {
+        state = GameState.STARTING;
+        gameCounter.startCounting(TIME_TO_START_A_GAME);
+    }
+
     private void end() {
         //Informuj kto wygral
         //teleportuj gracza na spawn
