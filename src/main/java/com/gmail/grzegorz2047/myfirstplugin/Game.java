@@ -52,7 +52,7 @@ public class Game {
         String playerName = player.getName();
         team1.remove(playerName);
         team2.remove(playerName);
-        Bukkit.broadcastMessage(ChatColor.RED + "Gracz " + player.getName() + " opuscil serwer!");
+        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Gracz " + player.getName() + " opuscil serwer!");
     }
 
     public void verifyState() {
