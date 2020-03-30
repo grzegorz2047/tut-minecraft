@@ -16,13 +16,13 @@ public class GameCounterCycleListener implements Listener {
     private void onCount(NextCycleOfGameCounter cycle) {
         if (this.game.isStarting()) {
             System.out.println("Pozostaly czas do startu " + cycle.getCurrentTime());
-            this.game.updateScoreboard();
+            this.game.updateScoreboard(cycle.getCurrentTime());
         }
         else if(this.game.isinWarmup()) {
-            this.game.updateScoreboard();
+            this.game.updateScoreboard(cycle.getCurrentTime());
         }
         else if(this.game.isInDeathMatch()) {
-            this.game.updateScoreboard();
+            this.game.updateScoreboard(cycle.getCurrentTime());
         }
     }
 }

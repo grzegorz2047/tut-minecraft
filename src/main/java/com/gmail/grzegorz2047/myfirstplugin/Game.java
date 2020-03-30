@@ -22,9 +22,11 @@ public class Game {
     private GameState state = GameState.WAITING;
     private List<String> team1 = new ArrayList<>();
     private List<String> team2 = new ArrayList<>();
+    private GameScoreboard gameScoreboard = new GameScoreboard();
 
 
     public void addPlayer(Player player) {
+        gameScoreboard.create(this, player);
         int teamNumber = assignPlayerToATeam(player.getName());
         PlayerInventory inventory = player.getInventory();
         inventory.clear();
@@ -121,7 +123,8 @@ public class Game {
         this.gameCounter.startCounting(TIME_TO_DEATHMATCH, CounterType.COUNTING_TO_DEATHMATCH);
     }
 
-    public void updateScoreboard() {
+    public void updateScoreboard(int currentTime) {
+        this.gameScoreboard.refresh(this, currentTime);
         //updates time in players scoreboard
     }
 
@@ -140,5 +143,13 @@ public class Game {
         this.gameCounter.startCounting(TIME_TO_END, CounterType.COUNTING_TO_END);
         //give players damage effect indefinitely
         //count 2 minutes and end game
+    }
+
+    public int getTeam1Size() {
+        return team1.size();
+    }
+
+    public int getTeam2Size() {
+        return team2.size();
     }
 }
