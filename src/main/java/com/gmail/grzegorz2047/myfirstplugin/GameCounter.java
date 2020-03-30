@@ -6,14 +6,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 public class GameCounter implements Runnable {
+    private CounterType counterType;
     private int time;
     private BukkitTask bukkitTask;
     private boolean isCounting = false;
 
-    public void startCounting(int seconds) {
+    public void startCounting(int seconds, CounterType counterType) {
         cancelCounting();
         this.time = seconds;
-        bukkitTask = Bukkit.getScheduler().runTaskTimer(Bukkit.getPluginManager().getPlugin("MyFirstPlugin"), this, 20L, 0L);
+        this.counterType = counterType;
+        bukkitTask = Bukkit.getScheduler().runTaskTimer(Bukkit.getPluginManager().getPlugin("MyFirstPlugin"), this, 0L, 20L);
         this.isCounting = true;
         //co sekunde daj zdarzenie odliczam
         //gdy dojdzie do zera, daj zdarzenie skonczylem odliczac
@@ -39,7 +41,7 @@ public class GameCounter implements Runnable {
 
     private void endCounting() {
         cancelCounting();
-        EndCountingOfGameCounter endCountingOfGameCounter = new EndCountingOfGameCounter();
+        EndCountingOfGameCounter endCountingOfGameCounter = new EndCountingOfGameCounter(counterType);
         Bukkit.getPluginManager().callEvent(endCountingOfGameCounter);
     }
 

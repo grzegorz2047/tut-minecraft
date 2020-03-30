@@ -12,17 +12,17 @@ import java.util.Collection;
 import java.util.List;
 
 public class Game {
-    private final int MIN_PLAYERS_TO_KEEP_COUNTING = 7;
-    private final int NUMBER_OF_PLAYERS_TO_START_COUNTING = 10;
+    private static final int TIME_TO_AFTERMATCH = 120;
+    private static final int TIME_TO_END = 120;
+    private final int MIN_PLAYERS_TO_KEEP_COUNTING = 1;
+    private final int NUMBER_OF_PLAYERS_TO_START_COUNTING = 1;
     private final int TIME_TO_START_A_GAME = 30;
+    private int TIME_TO_DEATHMATCH = 30;
     private GameCounter gameCounter = new GameCounter();
     private GameState state = GameState.WAITING;
     private List<String> team1 = new ArrayList<>();
     private List<String> team2 = new ArrayList<>();
 
-    public boolean isStarted() {
-        return state == GameState.WARMUP || state == GameState.DEATHMATCH;
-    }
 
     public void addPlayer(Player player) {
         int teamNumber = assignPlayerToATeam(player.getName());
@@ -59,9 +59,24 @@ public class Game {
         Bukkit.broadcastMessage(ChatColor.DARK_RED + "Gracz " + player.getName() + " opuscil serwer!");
     }
 
+    private void stopCounting() {
+        state = GameState.WAITING;
+        gameCounter.cancelCounting();
+    }
+
+    private void startCounting() {
+        state = GameState.STARTING;
+        gameCounter.startCounting(TIME_TO_START_A_GAME, CounterType.COUNTING_TO_START);
+    }
+
+    public boolean isStarted() {
+        return state == GameState.WARMUP || state == GameState.DEATHMATCH;
+    }
+
+
     public void verifyState() {
         int numberOfPlayerOnServer = Bukkit.getOnlinePlayers().size();
-        if(isStarted()) {
+        if (isStarted()) {
             if (isOneTeamLeft()) {
                 end();
             }
@@ -76,15 +91,6 @@ public class Game {
         }
     }
 
-    private void stopCounting() {
-        state = GameState.WAITING;
-        gameCounter.cancelCounting();
-    }
-
-    private void startCounting() {
-        state = GameState.STARTING;
-        gameCounter.startCounting(TIME_TO_START_A_GAME);
-    }
 
     private void end() {
         //Informuj kto wygral
@@ -92,7 +98,47 @@ public class Game {
         //wyczysc gracza
     }
 
-    private boolean isOneTeamLeft() {
+    public boolean isOneTeamLeft() {
         return team1.size() == 0 || team2.size() == 0;
+    }
+
+    public boolean isStarting() {
+        return state.equals(GameState.STARTING);
+    }
+
+    public boolean isinWarmup() {
+        return this.state.equals(GameState.WARMUP);
+    }
+
+    public void start() {
+        String message = "Gra wystartowala!";
+        System.out.println(message);
+        Bukkit.broadcastMessage(message);
+        this.state = GameState.WARMUP;
+        //teleport players to their team spawn
+        //give em some items
+        //give them some special effects
+        this.gameCounter.startCounting(TIME_TO_DEATHMATCH, CounterType.COUNTING_TO_DEATHMATCH);
+    }
+
+    public void updateScoreboard() {
+        //updates time in players scoreboard
+    }
+
+
+    public boolean isInDeathMatch() {
+        return this.state.equals(GameState.DEATHMATCH);
+    }
+
+    public void startDeathmatch() {
+        //teleport players to deathmatch team spawn;
+        this.state = GameState.DEATHMATCH;
+        this.gameCounter.startCounting(TIME_TO_AFTERMATCH, CounterType.COUNTING_TO_AFTERMATCH);
+    }
+
+    public void startAfterMatch() {
+        this.gameCounter.startCounting(TIME_TO_END, CounterType.COUNTING_TO_END);
+        //give players damage effect indefinitely
+        //count 2 minutes and end game
     }
 }

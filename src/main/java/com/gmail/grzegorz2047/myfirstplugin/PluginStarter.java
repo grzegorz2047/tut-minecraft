@@ -1,5 +1,7 @@
 package com.gmail.grzegorz2047.myfirstplugin;
 
+import com.gmail.grzegorz2047.myfirstplugin.listeners.GameCounterCycleListener;
+import com.gmail.grzegorz2047.myfirstplugin.listeners.GameCounterEndListener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.PluginManager;
@@ -19,6 +21,8 @@ public class PluginStarter extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(game), this);
         pluginManager.registerEvents(new PlayerQuitListener(game), this);
         pluginManager.registerEvents(new PlayerDeathListener(game), this);
+        pluginManager.registerEvents(new GameCounterCycleListener(game), this);
+        pluginManager.registerEvents(new GameCounterEndListener(game), this);
     }
 
 
