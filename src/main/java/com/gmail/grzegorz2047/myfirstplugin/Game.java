@@ -113,6 +113,9 @@ public class Game {
     }
 
     public void start() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            gameScoreboard.colorPlayersNicknameAboveHead(team1, team2, player);
+        }
         String message = "Gra wystartowala!";
         System.out.println(message);
         Bukkit.broadcastMessage(message);

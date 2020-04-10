@@ -5,11 +5,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
+import java.util.List;
+
 public class GameScoreboard {
 
     private final String timeLabel = ChatColor.GOLD + "Czas " + ChatColor.GRAY;
     private final String team1Label = ChatColor.RED + "Czerwoni " + ChatColor.GRAY;
     private String team2Label = ChatColor.BLUE + "Niebiescy " + ChatColor.GRAY;
+    private String team1ScoreboardId = "team1";
+    private String team2ScoreboardId = "team2";
 
     private void createCurrentTimeScore(int currentTime, Objective minigameObjective, Scoreboard newScoreboard) {
         Team team = newScoreboard.registerNewTeam(timeLabel);
@@ -53,11 +57,20 @@ public class GameScoreboard {
         Objective objective = scoreboard.registerNewObjective("Minigame", "dummy", "Tablica minigry");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         createTeamsScore(game, objective, scoreboard);
-        createCurrentTimeScore(0, objective, scoreboard);
+        createCurrentTimeScore(
+                0, objective, scoreboard);
         updateCurrentTimeScore(0, scoreboard);
         setCurrentTeamsScore(game, scoreboard);
-
+        createGameTeam(scoreboard, ChatColor.RED, team1ScoreboardId);
+        createGameTeam(scoreboard, ChatColor.BLUE, team2ScoreboardId);
         player.setScoreboard(scoreboard);
+    }
+
+    private void createGameTeam(Scoreboard scoreboard, ChatColor color, String teamLabel) {
+        Team scoreboardTeam = scoreboard.registerNewTeam(teamLabel);
+//        scoreboardTeam.setDisplayName("");
+        scoreboardTeam.setColor(color);
+        scoreboardTeam.setPrefix("§c§l❤ ");
     }
 
     public void refresh(Game game, int currentTime) {
@@ -72,4 +85,17 @@ public class GameScoreboard {
     }
 
 
+    public void colorPlayersNicknameAboveHead(List<String> playersOfTeam1, List<String> playersOfTeam2, Player player) {
+        Scoreboard scoreboard = player.getScoreboard();
+        filloutTeamWithNicks(playersOfTeam1, scoreboard, team1ScoreboardId);
+        filloutTeamWithNicks(playersOfTeam2, scoreboard, team2ScoreboardId);
+    }
+
+    private void filloutTeamWithNicks(List<String> playersOfTeam1, Scoreboard scoreboard, String teamId) {
+        Team teamData = scoreboard.getTeam(teamId);
+        for (String playerNick : playersOfTeam1) {
+            teamData.addEntry(playerNick);
+            System.out.println("teamId " + teamId + ", dodaje nick " + playerNick);
+        }
+    }
 }
