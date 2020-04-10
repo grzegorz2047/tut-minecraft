@@ -1,5 +1,7 @@
 package com.gmail.grzegorz2047.myfirstplugin;
 
+import com.gmail.grzegorz2047.myfirstplugin.teams.GameTeams;
+import com.gmail.grzegorz2047.myfirstplugin.teams.TeamID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -41,13 +43,13 @@ public class GameScoreboard {
 
 
     private void setCurrentTeamsScore(GameTeams gameTeams, Scoreboard scoreboard) {
-        updateTeamScore(scoreboard, team1Label, gameTeams.getTeam1Size());
-        updateTeamScore(scoreboard, team2Label, gameTeams.getTeam2Size());
+        updateTeamScore(scoreboard, team1Label, gameTeams.getMembersNumber(TeamID.TEAM_1));
+        updateTeamScore(scoreboard, team2Label, gameTeams.getMembersNumber(TeamID.TEAM_2));
     }
 
     private void createTeamsScore(GameTeams gameTeams, Objective objective, Scoreboard scoreboard) {
-        createTeamScore(objective, scoreboard, team1Label, gameTeams.getTeam1Size(), 2);
-        createTeamScore(objective, scoreboard, team2Label, gameTeams.getTeam2Size(), 1);
+        createTeamScore(objective, scoreboard, team1Label, gameTeams.getMembersNumber(TeamID.TEAM_1), 2);
+        createTeamScore(objective, scoreboard, team2Label, gameTeams.getMembersNumber(TeamID.TEAM_2), 1);
     }
 
     public void create(Game game, Player player) {
@@ -85,8 +87,8 @@ public class GameScoreboard {
 
     public void colorPlayersNicknameAboveHead(GameTeams teams, Player player) {
         Scoreboard scoreboard = player.getScoreboard();
-        filloutTeamWithNicks(teams.getTeamMembers(TeamID.TEAM_1.name()), scoreboard, TeamID.TEAM_1.name());
-        filloutTeamWithNicks(teams.getTeamMembers(TeamID.TEAM_2.name()), scoreboard, TeamID.TEAM_2.name());
+        filloutTeamWithNicks(teams.getTeamMembers(TeamID.TEAM_1), scoreboard, TeamID.TEAM_1.name());
+        filloutTeamWithNicks(teams.getTeamMembers(TeamID.TEAM_2), scoreboard, TeamID.TEAM_2.name());
     }
 
     private void filloutTeamWithNicks(List<String> playersOfTeam1, Scoreboard scoreboard, String teamId) {
