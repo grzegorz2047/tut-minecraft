@@ -12,8 +12,6 @@ public class GameScoreboard {
     private final String timeLabel = ChatColor.GOLD + "Czas " + ChatColor.GRAY;
     private final String team1Label = ChatColor.RED + "Czerwoni " + ChatColor.GRAY;
     private String team2Label = ChatColor.BLUE + "Niebiescy " + ChatColor.GRAY;
-    private String team1ScoreboardId = "team1";
-    private String team2ScoreboardId = "team2";
 
     private void createCurrentTimeScore(int currentTime, Objective minigameObjective, Scoreboard newScoreboard) {
         Team team = newScoreboard.registerNewTeam(timeLabel);
@@ -42,27 +40,27 @@ public class GameScoreboard {
     }
 
 
-    private void setCurrentTeamsScore(Game game, Scoreboard scoreboard) {
-        updateTeamScore(scoreboard, team1Label, game.getTeam1Size());
-        updateTeamScore(scoreboard, team2Label, game.getTeam2Size());
+    private void setCurrentTeamsScore(GameTeams gameTeams, Scoreboard scoreboard) {
+        updateTeamScore(scoreboard, team1Label, gameTeams.getTeam1Size());
+        updateTeamScore(scoreboard, team2Label, gameTeams.getTeam2Size());
     }
 
-    private void createTeamsScore(Game game, Objective objective, Scoreboard scoreboard) {
-        createTeamScore(objective, scoreboard, team1Label, game.getTeam1Size(), 2);
-        createTeamScore(objective, scoreboard, team2Label, game.getTeam2Size(), 1);
+    private void createTeamsScore(GameTeams gameTeams, Objective objective, Scoreboard scoreboard) {
+        createTeamScore(objective, scoreboard, team1Label, gameTeams.getTeam1Size(), 2);
+        createTeamScore(objective, scoreboard, team2Label, gameTeams.getTeam2Size(), 1);
     }
 
     public void create(Game game, Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("Minigame", "dummy", "Tablica minigry");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        createTeamsScore(game, objective, scoreboard);
+        createTeamsScore(game.getTeams(), objective, scoreboard);
         createCurrentTimeScore(
                 0, objective, scoreboard);
         updateCurrentTimeScore(0, scoreboard);
-        setCurrentTeamsScore(game, scoreboard);
-        createGameTeam(scoreboard, ChatColor.RED, team1ScoreboardId);
-        createGameTeam(scoreboard, ChatColor.BLUE, team2ScoreboardId);
+        setCurrentTeamsScore(game.getTeams(), scoreboard);
+        createGameTeam(scoreboard, ChatColor.RED, TeamID.TEAM_1.name());
+        createGameTeam(scoreboard, ChatColor.BLUE, TeamID.TEAM_2.name());
         player.setScoreboard(scoreboard);
     }
 
@@ -79,16 +77,16 @@ public class GameScoreboard {
             Objective minigameObjective = scoreboard.getObjective(DisplaySlot.SIDEBAR);
             if (minigameObjective != null) {
                 updateCurrentTimeScore(currentTime, scoreboard);
-                setCurrentTeamsScore(game, scoreboard);
+                setCurrentTeamsScore(game.getTeams(), scoreboard);
             }
         }
     }
 
 
-    public void colorPlayersNicknameAboveHead(List<String> playersOfTeam1, List<String> playersOfTeam2, Player player) {
+    public void colorPlayersNicknameAboveHead(GameTeams teams, Player player) {
         Scoreboard scoreboard = player.getScoreboard();
-        filloutTeamWithNicks(playersOfTeam1, scoreboard, team1ScoreboardId);
-        filloutTeamWithNicks(playersOfTeam2, scoreboard, team2ScoreboardId);
+        filloutTeamWithNicks(teams.getTeamMembers(TeamID.TEAM_1.name()), scoreboard, TeamID.TEAM_1.name());
+        filloutTeamWithNicks(teams.getTeamMembers(TeamID.TEAM_2.name()), scoreboard, TeamID.TEAM_2.name());
     }
 
     private void filloutTeamWithNicks(List<String> playersOfTeam1, Scoreboard scoreboard, String teamId) {

@@ -7,9 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class Game {
     private static final int TIME_TO_AFTERMATCH = 120;
@@ -20,14 +18,14 @@ public class Game {
     private int TIME_TO_DEATHMATCH = 30;
     private GameCounter gameCounter = new GameCounter();
     private GameState state = GameState.WAITING;
-    private List<String> team1 = new ArrayList<>();
-    private List<String> team2 = new ArrayList<>();
+    private GameTeams teams = new GameTeams();
+
     private GameScoreboard gameScoreboard = new GameScoreboard();
 
 
     public void addPlayer(Player player) {
         gameScoreboard.create(this, player);
-        int teamNumber = assignPlayerToATeam(player.getName());
+        int teamNumber = teams.assignPlayerToATeam(player.getName());
         PlayerInventory inventory = player.getInventory();
         inventory.clear();
         inventory.setContents(new ItemStack[4]);
@@ -42,22 +40,11 @@ public class Game {
         player.sendMessage(ChatColor.GREEN + "Dołączyłeś do druzyny " + teamNumber);
     }
 
-    private int assignPlayerToATeam(String playerName) {
-        int team1Size = team1.size();
-        int team2Size = team2.size();
-        if (team1Size < team2Size) {
-            team1.add(playerName);
-            return 1;
-        } else {
-            team2.add(playerName);
-            return 2;
-        }
-    }
+
 
     public void removePlayer(Player player) {
         String playerName = player.getName();
-        team1.remove(playerName);
-        team2.remove(playerName);
+        teams.removePlayerFromATeam(playerName);
         Bukkit.broadcastMessage(ChatColor.DARK_RED + "Gracz " + player.getName() + " opuscil serwer!");
     }
 
@@ -79,7 +66,7 @@ public class Game {
     public void verifyState() {
         int numberOfPlayerOnServer = Bukkit.getOnlinePlayers().size();
         if (isStarted()) {
-            if (isOneTeamLeft()) {
+            if (teams.isOneTeamLeft()) {
                 end();
             }
         } else if (state == GameState.STARTING) {
@@ -100,9 +87,7 @@ public class Game {
         //wyczysc gracza
     }
 
-    public boolean isOneTeamLeft() {
-        return team1.size() == 0 || team2.size() == 0;
-    }
+
 
     public boolean isStarting() {
         return state.equals(GameState.STARTING);
@@ -114,7 +99,7 @@ public class Game {
 
     public void start() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            gameScoreboard.colorPlayersNicknameAboveHead(team1, team2, player);
+            gameScoreboard.colorPlayersNicknameAboveHead(teams, player);
         }
         String message = "Gra wystartowala!";
         System.out.println(message);
@@ -148,11 +133,8 @@ public class Game {
         //count 2 minutes and end game
     }
 
-    public int getTeam1Size() {
-        return team1.size();
-    }
 
-    public int getTeam2Size() {
-        return team2.size();
+    public GameTeams getTeams() {
+        return teams;
     }
 }
