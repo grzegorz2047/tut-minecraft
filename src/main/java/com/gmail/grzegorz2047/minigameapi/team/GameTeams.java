@@ -1,5 +1,7 @@
 package com.gmail.grzegorz2047.minigameapi.team;
 
+import com.gmail.grzegorz2047.myfirstplugin.GameConfiguration;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +9,9 @@ import java.util.Map;
 public class GameTeams {
     Map<TeamID, GameTeam> teams = new HashMap<>();
 
-    public GameTeams() {
-        teams.put(TeamID.TEAM_1, new GameTeam(TeamID.TEAM_1));
-        teams.put(TeamID.TEAM_2, new GameTeam(TeamID.TEAM_2));
+    public GameTeams(GameConfiguration gameConfiguration) {
+        teams.put(TeamID.TEAM_1, new GameTeam(TeamID.TEAM_1, gameConfiguration.getSpawnTeam1()));
+        teams.put(TeamID.TEAM_2, new GameTeam(TeamID.TEAM_2, gameConfiguration.getSpawnTeam2()));
     }
 
     public int assignPlayerToATeam(String playerName) {

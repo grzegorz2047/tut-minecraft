@@ -18,13 +18,14 @@ public class Game {
     private final GameConfiguration gameConfiguration;
     private GameCounter gameCounter;
     private GameState state = GameState.WAITING;
-    private GameTeams teams = new GameTeams();
+    private GameTeams teams;
 
     private GameScoreboard gameScoreboard = new GameScoreboard();
 
     public Game(Plugin pluginReference, GameConfiguration gameConfiguration) {
         this.gameCounter = new GameCounter(pluginReference);
         this.gameConfiguration = gameConfiguration;
+        this.teams = new GameTeams(gameConfiguration);
     }
 
 

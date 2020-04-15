@@ -4,3 +4,8 @@ dlugoscTrwaniaDeathMatchu: 30
 dlugoscTrwaniaAfterMatchu: 30
 minimalnaLiczbaGraczyDoStartuGry: 2
 minimalnaLiczbaGraczyDoUtrzymaniaOdliczaniaStartuGry: 2
+druzyny:
+  druzyna1:
+    spawn: 'world,0,0,0,0,0'
+  druzyna2:
+    spawn: 'world,0,0,0,0,0'
