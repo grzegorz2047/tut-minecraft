@@ -2,7 +2,7 @@ name: MyFirstPlugin
 version: 1.0
 main: com.gmail.grzegorz2047.myfirstplugin.PluginStarter
 commands:
-  plugin:
-    description: Fajne komendy
-    usage: /plugin args
-    aliases: [first, plug]
+  spawns:
+    description: Komenda zapisujaca spawn druzyn
+    usage: /spawn args
+    aliases: [spns, sp]

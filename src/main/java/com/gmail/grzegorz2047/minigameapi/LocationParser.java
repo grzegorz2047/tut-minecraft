@@ -21,4 +21,14 @@ public class LocationParser {
 
         return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
     }
+
+    public String convertLocationToString(Location location) {
+        String worldName = location.getWorld().getName();
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        float yaw = location.getYaw();
+        float pitch = location.getPitch();
+        return worldName + "," + x + "," + y + "," + z + "," + yaw + "," + pitch;
+    }
 }

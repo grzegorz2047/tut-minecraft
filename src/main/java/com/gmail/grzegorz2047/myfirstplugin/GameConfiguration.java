@@ -1,11 +1,15 @@
 package com.gmail.grzegorz2047.myfirstplugin;
 
 import com.gmail.grzegorz2047.minigameapi.LocationParser;
+import com.gmail.grzegorz2047.minigameapi.team.TeamID;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class GameConfiguration {
     private final LocationParser locationParser = new LocationParser();
+    private final FileConfiguration config;
+    private final JavaPlugin pluginData;
     private int DEATHMATCH_TIME;
     private int AFTERMATCH_TIME;
     private int MIN_PLAYERS_TO_KEEP_COUNTING;
@@ -15,7 +19,9 @@ public class GameConfiguration {
     private Location spawnTeam1;
     private Location spawnTeam2;
 
-    public GameConfiguration(FileConfiguration config) {
+    public GameConfiguration(PluginStarter pluginData, FileConfiguration config) {
+        this.config = config;
+        this.pluginData = pluginData;
         this.TIME_TO_START_A_GAME = config.getInt("czasDoOdliczeniaStartuGry");
         this.NUMBER_OF_PLAYERS_TO_START_COUNTING = config.getInt("minimalnaLiczbaGraczyDoStartuGry");
         this.MIN_PLAYERS_TO_KEEP_COUNTING = config.getInt("minimalnaLiczbaGraczyDoUtrzymaniaOdliczaniaStartuGry");
@@ -56,5 +62,14 @@ public class GameConfiguration {
 
     public Location getSpawnTeam2() {
         return null;
+    }
+
+    public void setTeamSpawn(TeamID team, Location location) {
+        if (team.equals(TeamID.TEAM_1)) {
+            config.set("druzyny.druzyna1.spawn", locationParser.convertLocationToString(location));
+        } else if (team.equals(TeamID.TEAM_2)) {
+            config.set("druzyny.druzyna2.spawn", locationParser.convertLocationToString(location));
+        }
+        pluginData.saveConfig();
     }
 }
