@@ -14,6 +14,7 @@ public class GameCounterCycleListener implements Listener {
 
     @EventHandler
     private void onCount(NextCycleOfGameCounter cycle) {
+        game.verifyState();
         if (this.game.isStarting()) {
             System.out.println("Pozostaly czas do startu " + cycle.getCurrentTime());
             this.game.updateScoreboard(cycle.getCurrentTime());

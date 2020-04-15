@@ -10,7 +10,9 @@ public class PluginStarter extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Game game = new Game(this);
+        saveDefaultConfig();
+        GameConfiguration gameConfiguration = new GameConfiguration(this.getConfig());
+        Game game = new Game(this, gameConfiguration);
         registerEvents(game);
         System.out.println(this.getName() + " zostal wlaczony!");
     }

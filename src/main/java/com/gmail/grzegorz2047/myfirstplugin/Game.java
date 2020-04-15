@@ -15,20 +15,16 @@ import org.bukkit.potion.PotionEffect;
 import java.util.Collection;
 
 public class Game {
-    private static final int TIME_TO_AFTERMATCH = 120;
-    private static final int TIME_TO_END = 120;
-    private final int MIN_PLAYERS_TO_KEEP_COUNTING = 1;
-    private final int NUMBER_OF_PLAYERS_TO_START_COUNTING = 1;
-    private final int TIME_TO_START_A_GAME = 30;
-    private int TIME_TO_DEATHMATCH = 30;
+    private final GameConfiguration gameConfiguration;
     private GameCounter gameCounter;
     private GameState state = GameState.WAITING;
     private GameTeams teams = new GameTeams();
 
     private GameScoreboard gameScoreboard = new GameScoreboard();
 
-    public Game(Plugin pluginReference) {
-        gameCounter = new GameCounter(pluginReference);
+    public Game(Plugin pluginReference, GameConfiguration gameConfiguration) {
+        this.gameCounter = new GameCounter(pluginReference);
+        this.gameConfiguration = gameConfiguration;
     }
 
 
@@ -63,7 +59,7 @@ public class Game {
 
     private void startCounting() {
         state = GameState.STARTING;
-        gameCounter.startCounting(TIME_TO_START_A_GAME, CounterType.COUNTING_TO_START);
+        gameCounter.startCounting(gameConfiguration.getTIME_TO_START_A_GAME(), CounterType.COUNTING_TO_START);
     }
 
     public boolean isStarted() {
@@ -73,16 +69,18 @@ public class Game {
 
     public void verifyState() {
         int numberOfPlayerOnServer = Bukkit.getOnlinePlayers().size();
+        System.out.println("Stan " + state.name());
         if (isStarted()) {
             if (teams.isOneTeamLeft()) {
                 end();
             }
         } else if (state == GameState.STARTING) {
-            if (numberOfPlayerOnServer < MIN_PLAYERS_TO_KEEP_COUNTING) {
+            if (numberOfPlayerOnServer < gameConfiguration.getMIN_PLAYERS_TO_KEEP_COUNTING()) {
                 stopCounting();
+                System.out.println("zatrzymuje");
             }
         } else {
-            if (numberOfPlayerOnServer == NUMBER_OF_PLAYERS_TO_START_COUNTING) {
+            if (numberOfPlayerOnServer == gameConfiguration.getNUMBER_OF_PLAYERS_TO_START_COUNTING()) {
                 startCounting();
             }
         }
@@ -115,7 +113,7 @@ public class Game {
         //teleport players to their team spawn
         //give em some items
         //give them some special effects
-        this.gameCounter.startCounting(TIME_TO_DEATHMATCH, CounterType.COUNTING_TO_DEATHMATCH);
+        this.gameCounter.startCounting(gameConfiguration.getWARMUP_TIME(), CounterType.COUNTING_TO_DEATHMATCH);
     }
 
     public void updateScoreboard(int currentTime) {
@@ -131,11 +129,11 @@ public class Game {
     public void startDeathmatch() {
         //teleport players to deathmatch team spawn;
         this.state = GameState.DEATHMATCH;
-        this.gameCounter.startCounting(TIME_TO_AFTERMATCH, CounterType.COUNTING_TO_AFTERMATCH);
+        this.gameCounter.startCounting(gameConfiguration.getDEATHMATCH_TIME(), CounterType.COUNTING_TO_AFTERMATCH);
     }
 
     public void startAfterMatch() {
-        this.gameCounter.startCounting(TIME_TO_END, CounterType.COUNTING_TO_END);
+        this.gameCounter.startCounting(gameConfiguration.getAFTERMATCH_TIME(), CounterType.COUNTING_TO_END);
         //give players damage effect indefinitely
         //count 2 minutes and end game
     }

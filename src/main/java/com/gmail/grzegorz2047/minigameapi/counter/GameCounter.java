@@ -31,6 +31,7 @@ public class GameCounter implements Runnable {
         if (isCounting) {
             bukkitTask.cancel();
             isCounting = false;
+            System.out.println("zatrzymuje fest");
         }
     }
 
