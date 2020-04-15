@@ -3,7 +3,6 @@ package com.gmail.grzegorz2047.myfirstplugin;
 import com.gmail.grzegorz2047.myfirstplugin.listeners.GameCounterCycleListener;
 import com.gmail.grzegorz2047.myfirstplugin.listeners.GameCounterEndListener;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,7 +10,7 @@ public class PluginStarter extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Game game = new Game();
+        Game game = new Game(this);
         registerEvents(game);
         System.out.println(this.getName() + " zostal wlaczony!");
     }

@@ -1,7 +1,7 @@
 package com.gmail.grzegorz2047.myfirstplugin.listeners;
 
 import com.gmail.grzegorz2047.myfirstplugin.Game;
-import com.gmail.grzegorz2047.myfirstplugin.events.NextCycleOfGameCounter;
+import com.gmail.grzegorz2047.minigameapi.counter.events.NextCycleOfGameCounter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

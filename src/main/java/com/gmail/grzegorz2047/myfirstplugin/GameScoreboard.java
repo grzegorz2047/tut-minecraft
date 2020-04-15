@@ -1,7 +1,7 @@
 package com.gmail.grzegorz2047.myfirstplugin;
 
-import com.gmail.grzegorz2047.myfirstplugin.teams.GameTeams;
-import com.gmail.grzegorz2047.myfirstplugin.teams.TeamID;
+import com.gmail.grzegorz2047.minigameapi.team.GameTeams;
+import com.gmail.grzegorz2047.minigameapi.team.TeamID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package com.gmail.grzegorz2047.myfirstplugin.events;
+package com.gmail.grzegorz2047.minigameapi.counter.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

@@ -1,4 +1,4 @@
-package com.gmail.grzegorz2047.myfirstplugin;
+package com.gmail.grzegorz2047.minigameapi.counter;
 
 public enum CounterType {
     COUNTING_TO_START,

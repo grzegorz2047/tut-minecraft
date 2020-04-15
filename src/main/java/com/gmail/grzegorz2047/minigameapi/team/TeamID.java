@@ -1,4 +1,4 @@
-package com.gmail.grzegorz2047.myfirstplugin.teams;
+package com.gmail.grzegorz2047.minigameapi.team;
 
 public enum TeamID {
     TEAM_1(1),

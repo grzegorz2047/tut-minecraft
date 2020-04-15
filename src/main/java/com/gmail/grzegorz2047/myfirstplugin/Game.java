@@ -1,11 +1,15 @@
 package com.gmail.grzegorz2047.myfirstplugin;
 
-import com.gmail.grzegorz2047.myfirstplugin.teams.GameTeams;
+
+import com.gmail.grzegorz2047.minigameapi.counter.CounterType;
+import com.gmail.grzegorz2047.minigameapi.counter.GameCounter;
+import com.gmail.grzegorz2047.minigameapi.team.GameTeams;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Collection;
@@ -17,11 +21,15 @@ public class Game {
     private final int NUMBER_OF_PLAYERS_TO_START_COUNTING = 1;
     private final int TIME_TO_START_A_GAME = 30;
     private int TIME_TO_DEATHMATCH = 30;
-    private GameCounter gameCounter = new GameCounter();
+    private GameCounter gameCounter;
     private GameState state = GameState.WAITING;
     private GameTeams teams = new GameTeams();
 
     private GameScoreboard gameScoreboard = new GameScoreboard();
+
+    public Game(Plugin pluginReference) {
+        gameCounter = new GameCounter(pluginReference);
+    }
 
 
     public void addPlayer(Player player) {
@@ -40,7 +48,6 @@ public class Game {
         player.setHealth(player.getHealthScale());
         player.sendMessage(ChatColor.GREEN + "Dołączyłeś do druzyny " + teamNumber);
     }
-
 
 
     public void removePlayer(Player player) {
@@ -87,7 +94,6 @@ public class Game {
         //teleportuj gracza na spawn
         //wyczysc gracza
     }
-
 
 
     public boolean isStarting() {
@@ -137,5 +143,9 @@ public class Game {
 
     public GameTeams getTeams() {
         return teams;
+    }
+
+    public boolean isOneTeamLeft() {
+        return teams.isOneTeamLeft();
     }
 }
