@@ -57,11 +57,11 @@ public class GameConfiguration {
     }
 
     public Location getSpawnTeam1() {
-        return null;
+        return spawnTeam1;
     }
 
     public Location getSpawnTeam2() {
-        return null;
+        return spawnTeam2;
     }
 
     public void setTeamSpawn(TeamID team, Location location) {

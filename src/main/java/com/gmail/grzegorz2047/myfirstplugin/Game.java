@@ -107,8 +107,8 @@ public class Game {
         for (Player player : Bukkit.getOnlinePlayers()) {
             gameScoreboard.colorPlayersNicknameAboveHead(teams, player);
         }
+        teams.teleportPlayersToTheirTeamSpawns();
         String message = "Gra wystartowala!";
-        System.out.println(message);
         Bukkit.broadcastMessage(message);
         this.state = GameState.WARMUP;
         //teleport players to their team spawn

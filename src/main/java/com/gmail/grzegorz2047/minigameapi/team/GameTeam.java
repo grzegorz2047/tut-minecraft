@@ -1,6 +1,8 @@
 package com.gmail.grzegorz2047.minigameapi.team;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,5 +40,21 @@ public class GameTeam {
 
     public Location getSpawnTeam() {
         return spawnTeam;
+    }
+
+    public void teleportMembersToTeamSpawn() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (isMember(player.getName())) {
+                teleportMemberToTeamSpawn(player);
+            }
+        }
+    }
+
+    public boolean isMember(String playerName) {
+        return members.contains(playerName);
+    }
+
+    public void teleportMemberToTeamSpawn(Player player) {
+        player.teleport(spawnTeam);
     }
 }

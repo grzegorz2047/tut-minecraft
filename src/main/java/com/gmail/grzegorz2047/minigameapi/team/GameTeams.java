@@ -1,6 +1,7 @@
 package com.gmail.grzegorz2047.minigameapi.team;
 
 import com.gmail.grzegorz2047.myfirstplugin.GameConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,5 +63,19 @@ public class GameTeams {
     public int getMembersNumber(TeamID teamID) {
         GameTeam gameTeam = teams.get(teamID);
         return gameTeam.getSize();
+    }
+
+    public void teleportPlayersToTheirTeamSpawns() {
+        for (GameTeam team : this.teams.values()) {
+            team.teleportMembersToTeamSpawn();
+        }
+    }
+
+    public void teleportPlayerToTheirTeamSpawns(Player player) {
+        for (GameTeam team : this.teams.values()) {
+            if(team.isMember(player.getName())) {
+                team.teleportMemberToTeamSpawn(player);
+            }
+        }
     }
 }
