@@ -3,6 +3,7 @@ package com.gmail.grzegorz2047.myfirstplugin.command;
 import com.gmail.grzegorz2047.minigameapi.team.TeamID;
 import com.gmail.grzegorz2047.myfirstplugin.GameConfiguration;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,15 +31,21 @@ public class SpawnsCommand implements CommandExecutor {
             if (!action.equalsIgnoreCase("set")) {
                 return false;
             }
+            Location playerLocation = player.getLocation();
             if (teamLabel.equalsIgnoreCase(TeamID.TEAM_1.getTeamRawLabel())) {
-                gameConfiguration.setTeamSpawn(TeamID.TEAM_1, player.getLocation());
+                gameConfiguration.setTeamSpawn(TeamID.TEAM_1, playerLocation);
                 player.sendMessage(ChatColor.GOLD + "Spawn dla " + TeamID.TEAM_1 + " zostal ustawiony!");
                 return true;
             } else if (teamLabel.equalsIgnoreCase(TeamID.TEAM_2.getTeamRawLabel())) {
-                gameConfiguration.setTeamSpawn(TeamID.TEAM_2, player.getLocation());
+                gameConfiguration.setTeamSpawn(TeamID.TEAM_2, playerLocation);
                 player.sendMessage(ChatColor.GOLD + "Spawn dla " + TeamID.TEAM_2 + " zostal ustawiony!");
                 return true;
-            } else {
+            } else if(teamLabel.equalsIgnoreCase("lobby")) {
+                gameConfiguration.setSpawnLobby(playerLocation);
+                player.sendMessage(ChatColor.GOLD + "Spawn lobby zostal ustawiony!");
+                return true;
+            }
+            else {
                 return false;
             }
         }

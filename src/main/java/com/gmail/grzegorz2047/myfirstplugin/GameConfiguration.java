@@ -10,6 +10,7 @@ public class GameConfiguration {
     private final LocationParser locationParser = new LocationParser();
     private final FileConfiguration config;
     private final JavaPlugin pluginData;
+
     private int DEATHMATCH_TIME;
     private int AFTERMATCH_TIME;
     private int MIN_PLAYERS_TO_KEEP_COUNTING;
@@ -18,6 +19,7 @@ public class GameConfiguration {
     private int WARMUP_TIME;
     private Location spawnTeam1;
     private Location spawnTeam2;
+    private Location spawnLobby;
 
     public GameConfiguration(PluginStarter pluginData, FileConfiguration config) {
         this.config = config;
@@ -30,6 +32,7 @@ public class GameConfiguration {
         this.AFTERMATCH_TIME = config.getInt("dlugoscTrwaniaAfterMatchu");
         this.spawnTeam1 = locationParser.parseLocation(config.getString("druzyny.druzyna1.spawn"));
         this.spawnTeam2 = locationParser.parseLocation(config.getString("druzyny.druzyna2.spawn"));
+        this.spawnLobby = locationParser.parseLocation(config.getString("lobby.spawn"));
     }
 
     public int getDEATHMATCH_TIME() {
@@ -67,9 +70,21 @@ public class GameConfiguration {
     public void setTeamSpawn(TeamID team, Location location) {
         if (team.equals(TeamID.TEAM_1)) {
             config.set("druzyny.druzyna1.spawn", locationParser.convertLocationToString(location));
+            this.spawnTeam1 = location;
         } else if (team.equals(TeamID.TEAM_2)) {
             config.set("druzyny.druzyna2.spawn", locationParser.convertLocationToString(location));
+            this.spawnTeam2 = location;
         }
         pluginData.saveConfig();
+    }
+
+    public Location getSpawnLobby() {
+        return this.spawnLobby;
+    }
+
+    public void setSpawnLobby(Location playerLocation) {
+        config.set("lobby.spawn", locationParser.convertLocationToString(playerLocation));
+        pluginData.saveConfig();
+        this.spawnLobby = playerLocation;
     }
 }

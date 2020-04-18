@@ -6,6 +6,7 @@ import com.gmail.grzegorz2047.minigameapi.counter.GameCounter;
 import com.gmail.grzegorz2047.minigameapi.team.GameTeams;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -30,6 +31,7 @@ public class Game {
 
 
     public void addPlayer(Player player) {
+        teleportPlayerToALobby(player);
         gameScoreboard.create(this, player);
         int teamNumber = teams.assignPlayerToATeam(player.getName());
         PlayerInventory inventory = player.getInventory();
@@ -44,6 +46,11 @@ public class Game {
         player.setTotalExperience(0);
         player.setHealth(player.getHealthScale());
         player.sendMessage(ChatColor.GREEN + "Dołączyłeś do druzyny " + teamNumber);
+    }
+
+    private void teleportPlayerToALobby(Player player) {
+        Location spawnLobby = gameConfiguration.getSpawnLobby();
+        player.teleport(spawnLobby);
     }
 
 
