@@ -4,19 +4,19 @@ package com.gmail.grzegorz2047.myfirstplugin;
 import com.gmail.grzegorz2047.minigameapi.counter.CounterType;
 import com.gmail.grzegorz2047.minigameapi.counter.GameCounter;
 import com.gmail.grzegorz2047.minigameapi.team.GameTeams;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collection;
 
 public class Game {
     private final GameConfiguration gameConfiguration;
+    private final Plugin pluginReference;
     private GameCounter gameCounter;
     private GameState state = GameState.WAITING;
     private GameTeams teams;
@@ -27,10 +27,12 @@ public class Game {
         this.gameCounter = new GameCounter(pluginReference);
         this.gameConfiguration = gameConfiguration;
         this.teams = new GameTeams(gameConfiguration);
+        this.pluginReference = pluginReference;
     }
 
 
     public void addPlayer(Player player) {
+        player.setGameMode(GameMode.SURVIVAL);
         teleportPlayerToALobby(player);
         gameScoreboard.create(this, player);
         int teamNumber = teams.assignPlayerToATeam(player.getName());
@@ -48,16 +50,21 @@ public class Game {
         player.sendMessage(ChatColor.GREEN + "Dołączyłeś do druzyny " + teamNumber);
     }
 
-    private void teleportPlayerToALobby(Player player) {
+    public void teleportPlayerToALobby(Player player) {
         Location spawnLobby = gameConfiguration.getSpawnLobby();
         player.teleport(spawnLobby);
+    }
+
+    public void teleportPlayerToALobbyWithDelay(Player player) {
+        Location spawnLobby = gameConfiguration.getSpawnLobby();
+        Bukkit.getScheduler().runTaskLater(pluginReference, () -> player.teleport(spawnLobby), 2L);
     }
 
 
     public void removePlayer(Player player) {
         String playerName = player.getName();
         teams.removePlayerFromATeam(playerName);
-        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Gracz " + player.getName() + " opuscil serwer!");
+
     }
 
     private void stopCounting() {
@@ -79,7 +86,10 @@ public class Game {
         int numberOfPlayerOnServer = Bukkit.getOnlinePlayers().size();
         System.out.println("Stan " + state.name());
         if (isStarted()) {
+            System.out.println("Stan wystartowany");
             if (teams.isOneTeamLeft()) {
+                System.out.println("Zostala ostatnia druzyna");
+                stopCounting();
                 end();
             }
         } else if (state == GameState.STARTING) {
@@ -96,9 +106,14 @@ public class Game {
 
 
     private void end() {
+        Bukkit.broadcastMessage(ChatColor.GOLD + "Ostatnia druzyna wygrala!");
+        state = GameState.WAITING;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            removePlayer(player);
+            addPlayer(player);
+        }
+        verifyState();
         //Informuj kto wygral
-        //teleportuj gracza na spawn
-        //wyczysc gracza
     }
 
 
@@ -121,6 +136,10 @@ public class Game {
         //teleport players to their team spawn
         //give em some items
         //give them some special effects
+        World world = Bukkit.getWorlds().get(0);
+        world.setTime(0);
+        world.setStorm(false);
+        world.setThundering(false);
         this.gameCounter.startCounting(gameConfiguration.getWARMUP_TIME(), CounterType.COUNTING_TO_DEATHMATCH);
     }
 
@@ -142,8 +161,14 @@ public class Game {
 
     public void startAfterMatch() {
         this.gameCounter.startCounting(gameConfiguration.getAFTERMATCH_TIME(), CounterType.COUNTING_TO_END);
-        //give players damage effect indefinitely
-        //count 2 minutes and end game
+        System.out.println("Daje efekty graczom");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, Integer.MAX_VALUE, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
+            }
+        }
     }
 
 

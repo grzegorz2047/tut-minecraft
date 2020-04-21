@@ -16,20 +16,17 @@ public class GameCounterEndListener implements Listener {
     @EventHandler
     private void onEndCounting(EndCountingOfGameCounter event) {
         CounterType counterType = event.getCounterType();
-        if(counterType.equals(CounterType.COUNTING_TO_START)) {
-            if(this.game.isStarting()) {
+        if (counterType.equals(CounterType.COUNTING_TO_START)) {
+            if (this.game.isStarting()) {
                 game.start();
             }
-        }
-        else if (counterType.equals(CounterType.COUNTING_TO_DEATHMATCH)) {
-            if(this.game.isinWarmup()) {
+        } else if (counterType.equals(CounterType.COUNTING_TO_DEATHMATCH)) {
+            if (this.game.isinWarmup()) {
                 this.game.startDeathmatch();
             }
-        }
-        else if(counterType.equals(CounterType.COUNTING_TO_END)) {
-            if(!this.game.isOneTeamLeft()) {
-                this.game.startAfterMatch();
-            }
+        } else if (counterType.equals(CounterType.COUNTING_TO_AFTERMATCH)) {
+            System.out.println("odliczono do aftermatchu");
+            this.game.startAfterMatch();
         }
 
     }

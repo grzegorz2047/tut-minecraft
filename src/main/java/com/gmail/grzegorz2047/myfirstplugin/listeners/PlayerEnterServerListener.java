@@ -1,15 +1,17 @@
-package com.gmail.grzegorz2047.myfirstplugin;
+package com.gmail.grzegorz2047.myfirstplugin.listeners;
 
+import com.gmail.grzegorz2047.myfirstplugin.Game;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 
-public class PlayerJoinListener implements Listener {
+public class PlayerEnterServerListener implements Listener {
     private final Game game;
 
-    public PlayerJoinListener(Game game) {
+    public PlayerEnterServerListener(Game game) {
         this.game = game;
     }
 
@@ -22,5 +24,10 @@ public class PlayerJoinListener implements Listener {
             game.addPlayer(player);
             game.verifyState();
         }
+    }
+
+    @EventHandler
+    private void onLogin(PlayerLoginEvent e) {
+        game.teleportPlayerToALobby(e.getPlayer());
     }
 }
