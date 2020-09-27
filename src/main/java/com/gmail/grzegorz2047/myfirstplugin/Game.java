@@ -4,6 +4,7 @@ package com.gmail.grzegorz2047.myfirstplugin;
 import com.gmail.grzegorz2047.minigameapi.counter.CounterType;
 import com.gmail.grzegorz2047.minigameapi.counter.GameCounter;
 import com.gmail.grzegorz2047.minigameapi.team.GameTeams;
+import com.gmail.grzegorz2047.myfirstplugin.database.DatabaseQueries;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,26 +13,48 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 public class Game {
     private final GameConfiguration gameConfiguration;
     private final Plugin pluginReference;
+    private final DatabaseQueries queries;
     private GameCounter gameCounter;
     private GameState state = GameState.WAITING;
     private GameTeams teams;
 
     private GameScoreboard gameScoreboard = new GameScoreboard();
 
-    public Game(Plugin pluginReference, GameConfiguration gameConfiguration) {
+    public Game(Plugin pluginReference, GameConfiguration gameConfiguration, DatabaseQueries queries) {
         this.gameCounter = new GameCounter(pluginReference);
         this.gameConfiguration = gameConfiguration;
         this.teams = new GameTeams(gameConfiguration);
         this.pluginReference = pluginReference;
+        this.queries = queries;
     }
 
 
     public void addPlayer(Player player) {
+        Optional<GamePlayer> returnedPlayerData;
+        String kickMsg = "Jest problem z serwerem! Sprobuj ponownie pozniej!";
+        try {
+            String uuid = player.getUniqueId().toString();
+            queries.insertPlayer(uuid, player.getName(), 0);
+            returnedPlayerData = queries.getPlayer(uuid);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            player.kickPlayer(kickMsg);
+            return;
+        }
+        if (!returnedPlayerData.isPresent()) {
+            System.out.println("Nie ma zadnej wartosci w optionalu!");
+            player.kickPlayer(kickMsg);
+            return;
+        }
+        GamePlayer gamePlayer = returnedPlayerData.get();
+        player.sendMessage(ChatColor.GRAY + "Twoje statystyki:\npunkty:" + ChatColor.GOLD + gamePlayer.getPoints());
         player.setGameMode(GameMode.SURVIVAL);
         teleportPlayerToALobby(player);
         gameScoreboard.create(this, player);
