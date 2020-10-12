@@ -27,6 +27,7 @@ public class MysqlDatabaseQueries implements DatabaseQueries {
         preparedStatement.execute();
         preparedStatement.clearParameters();
         preparedStatement.close();
+        connection.close();
     }
 
 
@@ -47,11 +48,13 @@ public class MysqlDatabaseQueries implements DatabaseQueries {
             String playerName = resultSet.getString("playerName");
             int points = resultSet.getInt("points");
             System.out.println(id + "" + playerName + " " + points);
+            connection.close();
             return Optional.of(new GamePlayer(
                     id,
                     playerName,
                     points
             ));
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return Optional.empty();

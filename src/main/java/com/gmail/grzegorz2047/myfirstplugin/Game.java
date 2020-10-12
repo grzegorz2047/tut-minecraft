@@ -57,7 +57,7 @@ public class Game {
         player.sendMessage(ChatColor.GRAY + "Twoje statystyki:\npunkty:" + ChatColor.GOLD + gamePlayer.getPoints());
         player.setGameMode(GameMode.SURVIVAL);
         teleportPlayerToALobby(player);
-        gameScoreboard.create(this, player);
+        gameScoreboard.create(this, player, gamePlayer);
         int teamNumber = teams.assignPlayerToATeam(player.getName());
         PlayerInventory inventory = player.getInventory();
         inventory.clear();

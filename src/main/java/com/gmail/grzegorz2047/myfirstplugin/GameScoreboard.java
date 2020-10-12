@@ -13,6 +13,7 @@ public class GameScoreboard {
 
     private final String timeLabel = ChatColor.GOLD + "Czas " + ChatColor.GRAY;
     private final String team1Label = ChatColor.RED + "Czerwoni " + ChatColor.GRAY;
+    private final String pointsLabel = ChatColor.GREEN + "Punkty " + ChatColor.GRAY;
     private String team2Label = ChatColor.BLUE + "Niebiescy " + ChatColor.GRAY;
 
     private void createCurrentTimeScore(int currentTime, Objective minigameObjective, Scoreboard newScoreboard) {
@@ -52,7 +53,7 @@ public class GameScoreboard {
         createTeamScore(objective, scoreboard, team2Label, gameTeams.getMembersNumber(TeamID.TEAM_2), 1);
     }
 
-    public void create(Game game, Player player) {
+    public void create(Game game, Player player, GamePlayer gamePlayer) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("Minigame", "dummy", "Tablica minigry");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -63,6 +64,7 @@ public class GameScoreboard {
         setCurrentTeamsScore(game.getTeams(), scoreboard);
         createGameTeam(scoreboard, ChatColor.RED, TeamID.TEAM_1.name());
         createGameTeam(scoreboard, ChatColor.BLUE, TeamID.TEAM_2.name());
+        createTeamScore(objective, scoreboard, pointsLabel, gamePlayer.getPoints(), 3);
         player.setScoreboard(scoreboard);
     }
 

@@ -32,6 +32,7 @@ public class MysqlDatabase implements Database {
         hikari.addDataSourceProperty("databaseName", db);
         hikari.addDataSourceProperty("user", user);
         hikari.addDataSourceProperty("password", password);
+        hikari.setMaximumPoolSize(50);
     }
 
     @Override
