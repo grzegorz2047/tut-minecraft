@@ -18,6 +18,10 @@ public class PlayerDeathListener implements Listener {
     @EventHandler
     private void onDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
+        Player killer = player.getKiller();
+        if(killer != null) {
+            game.addKillPoint(killer);
+        }
         game.removePlayer(player);
         player.setGameMode(GameMode.SPECTATOR);
         game.teleportPlayerToALobbyWithDelay(player);

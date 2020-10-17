@@ -9,4 +9,8 @@ public interface DatabaseQueries {
     void insertPlayer(String uuid, String userName, int points) throws SQLException;
 
     Optional<GamePlayer> getPlayer(String userName);
+
+    void incrementStat(String uuid, PlayerTableColumn column, int value);
+
+    void removePlayer(String uuid);
 }

@@ -2,6 +2,7 @@ package com.gmail.grzegorz2047.myfirstplugin;
 
 import com.gmail.grzegorz2047.minigameapi.database.Database;
 import com.gmail.grzegorz2047.minigameapi.database.MysqlDatabase;
+import com.gmail.grzegorz2047.myfirstplugin.command.BansCommand;
 import com.gmail.grzegorz2047.myfirstplugin.command.SpawnsCommand;
 import com.gmail.grzegorz2047.myfirstplugin.database.DatabaseQueries;
 import com.gmail.grzegorz2047.myfirstplugin.database.MysqlDatabaseQueries;
@@ -19,11 +20,12 @@ public class PluginStarter extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         GameConfiguration gameConfiguration = new GameConfiguration(this, this.getConfig());
-        registerCommands(gameConfiguration);
+
         mysqlDatabase = new MysqlDatabase("localhost", 3306, "java", "java", "123456789");
         mysqlDatabase.connect();
         DatabaseQueries queries = new MysqlDatabaseQueries(mysqlDatabase);
         Game game = new Game(this, gameConfiguration, queries);
+        registerCommands(gameConfiguration, game);
         registerEvents(game);
         Bukkit.getWorlds().get(0).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         System.out.println(this.getName() + " zostal wlaczony!");
@@ -34,8 +36,9 @@ public class PluginStarter extends JavaPlugin {
         mysqlDatabase.disconnect();
     }
 
-    private void registerCommands(GameConfiguration gameConfiguration) {
+    private void registerCommands(GameConfiguration gameConfiguration, Game game) {
         getCommand("spawns").setExecutor(new SpawnsCommand(gameConfiguration));
+        getCommand("bans").setExecutor(new BansCommand(game));
     }
 
     private void registerEvents(Game game) {

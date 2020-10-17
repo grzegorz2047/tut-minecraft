@@ -5,6 +5,7 @@ import com.gmail.grzegorz2047.minigameapi.counter.CounterType;
 import com.gmail.grzegorz2047.minigameapi.counter.GameCounter;
 import com.gmail.grzegorz2047.minigameapi.team.GameTeams;
 import com.gmail.grzegorz2047.myfirstplugin.database.DatabaseQueries;
+import com.gmail.grzegorz2047.myfirstplugin.database.PlayerTableColumn;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 public class Game {
     private final GameConfiguration gameConfiguration;
@@ -201,5 +201,20 @@ public class Game {
 
     public boolean isOneTeamLeft() {
         return teams.isOneTeamLeft();
+    }
+
+    public void addKillPoint(Player killer) {
+        this.queries.incrementStat(killer.getUniqueId().toString(), PlayerTableColumn.POINTS, 1);
+    }
+
+    public void banPlayer(OfflinePlayer player) {
+        Date date = new Date();
+        date.setMonth(Calendar.DECEMBER);
+        Bukkit.getBanList(BanList.Type.NAME).addBan(Objects.requireNonNull(player.getName()),"cde", date,"abc");
+        queries.removePlayer(player.getUniqueId().toString());
+    }
+
+    public void unbanPlayer(OfflinePlayer player) {
+        Bukkit.getBanList(BanList.Type.NAME).pardon(Objects.requireNonNull(player.getName()));
     }
 }

@@ -2,6 +2,8 @@ package com.gmail.grzegorz2047.myfirstplugin.command;
 
 import com.gmail.grzegorz2047.minigameapi.team.TeamID;
 import com.gmail.grzegorz2047.myfirstplugin.GameConfiguration;
+import org.bukkit.BanList;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -21,6 +23,7 @@ public class SpawnsCommand implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return false;
         }
+
         Player player = ((Player) commandSender);
         if (!(player.isOp()) && !player.hasPermission("myfirstplugin.spawns.set")) {
             return false;

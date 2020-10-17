@@ -60,4 +60,38 @@ public class MysqlDatabaseQueries implements DatabaseQueries {
             return Optional.empty();
         }
     }
+
+    @Override
+    public void incrementStat(String uuid, PlayerTableColumn column, int value) {
+        try {
+            Connection connection = database.getConnection();
+            String columnName = column.getColumnName();
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE players  SET " + columnName + " = " + columnName + "+ ? WHERE uniqueId = ?");
+            preparedStatement.setInt(1, value);
+            preparedStatement.setString(2, uuid);
+            int result = preparedStatement.executeUpdate();
+            System.out.println("Aktualizacja rekordu zwróciła " + result);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    public void removePlayer(String uuid) {
+        try {
+            Connection connection = database.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM players WHERE uniqueId=?");
+            preparedStatement.setString(1, uuid);
+            int execute = preparedStatement.executeUpdate();
+            if (execute == 0) {
+                System.out.println("Nie usunieto rekordu!");
+            } else {
+                System.out.println("Usunieto wpis!");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
 }

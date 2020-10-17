@@ -6,3 +6,7 @@ commands:
     description: Komenda zapisujaca spawn druzyn
     usage: /spawn args
     aliases: [spns, sp]
+  bans:
+    description: Komenda banujaca gracza
+    usage: /bans args
+    aliases: [bns, bs]
