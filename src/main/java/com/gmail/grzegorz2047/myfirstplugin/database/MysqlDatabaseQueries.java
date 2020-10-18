@@ -72,6 +72,7 @@ public class MysqlDatabaseQueries implements DatabaseQueries {
             preparedStatement.setString(2, uuid);
             int result = preparedStatement.executeUpdate();
             System.out.println("Aktualizacja rekordu zwróciła " + result);
+            connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -89,6 +90,7 @@ public class MysqlDatabaseQueries implements DatabaseQueries {
             } else {
                 System.out.println("Usunieto wpis!");
             }
+            connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
